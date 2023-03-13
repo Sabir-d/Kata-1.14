@@ -87,7 +87,6 @@ public class UserDaoJDBCImpl implements UserDao {
     public List<User> getAllUsers() {
         List<User> userList = new ArrayList<>();
         try (Statement statement = connection.createStatement()) {
-            connection.setAutoCommit(false);
             ResultSet resultSet = statement.executeQuery("SELECT * from user");
             while (resultSet.next()) {
                 User user = new User();
@@ -97,15 +96,10 @@ public class UserDaoJDBCImpl implements UserDao {
                 user.setAge(resultSet.getByte(4));
                 userList.add(user);
             }
-            connection.commit();
+
             System.out.println("Лист создан");
         } catch (SQLException e) {
             System.out.println("Лист не создан");
-            try {
-                connection.rollback();
-            } catch (SQLException ex) {
-                System.out.println("Не удалось востановить данные");
-            }
         }
 
         return userList;
